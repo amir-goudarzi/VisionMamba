@@ -31,8 +31,8 @@ except ImportError:
 
 
 __all__ = [
-    'vim_tiny_patch16_224', 'vim_small_patch16_224', 'vim_base_patch16_224',
-    'vim_tiny_patch16_384', 'vim_small_patch16_384', 'vim_base_patch16_384',
+    'vim_tiny_patch28_112', 'vim_small_patch28_112', 'vim_base_patch28_112',
+    'vim_tiny_patch28_384', 'vim_small_patch28_384', 'vim_base_patch28_384',
 ]
 
 class Block(nn.Module):
@@ -186,12 +186,12 @@ def segm_init_weights(m):
 
 class VisionMamba(nn.Module):
     def __init__(self, 
-                 img_size=224, 
-                 patch_size=16, 
+                 img_size=112, 
+                 patch_size=28, 
                  depth=24, 
                  embed_dim=192, 
-                 channels=3, 
-                 num_classes=1000,
+                 channels=1, 
+                 num_classes=2,
                  ssm_cfg=None, 
                  drop_rate=0.,
                  drop_path_rate=0.1,
@@ -215,6 +215,9 @@ class VisionMamba(nn.Module):
         # add factory_kwargs into kwargs
         kwargs.update(factory_kwargs) 
         super().__init__()
+        self.patch_size = patch_size
+        self.depth = depth
+        self.embed_dim = embed_dim
         self.residual_in_fp32 = residual_in_fp32
         self.fused_add_norm = fused_add_norm
         self.final_pool_type = final_pool_type
@@ -382,9 +385,9 @@ class VisionMamba(nn.Module):
 
 
 @register_model
-def vim_tiny_patch16_224_bimambav2_final_pool_mean_abs_pos_embed_rope_also_residual(pretrained=False, **kwargs):
+def vim_tiny_patch28_112_bimambav2_final_pool_mean_abs_pos_embed_rope_also_residual(pretrained=False, **kwargs):
     model = VisionMamba(
-        patch_size=16, embed_dim=192, depth=24, rms_norm=True, residual_in_fp32=True, fused_add_norm=True, final_pool_type='mean', if_abs_pos_embed=True, if_rope=True, if_rope_residual=True, bimamba_type="v2", **kwargs)
+        patch_size=28, embed_dim=192, depth=24, rms_norm=True, residual_in_fp32=True, fused_add_norm=True, final_pool_type='mean', if_abs_pos_embed=True, if_rope=True, if_rope_residual=True, bimamba_type="v2", **kwargs)
     model.default_cfg = _cfg()
     if pretrained:
         checkpoint = torch.hub.load_state_dict_from_url(
@@ -396,9 +399,9 @@ def vim_tiny_patch16_224_bimambav2_final_pool_mean_abs_pos_embed_rope_also_resid
 
 
 @register_model
-def vim_tiny_patch16_224_bimambav2_final_pool_mean_abs_pos_embed_rope_also_residual_with_cls_token(pretrained=False, **kwargs):
+def vim_tiny_patch28_112_bimambav2_final_pool_mean_abs_pos_embed_rope_also_residual_with_cls_token(pretrained=False, **kwargs):
     model = VisionMamba(
-        patch_size=16, embed_dim=192, depth=24, rms_norm=True, residual_in_fp32=True, fused_add_norm=True, final_pool_type='mean', if_abs_pos_embed=True, if_rope=True, if_rope_residual=True, bimamba_type="v2", if_cls_token=True, **kwargs)
+        patch_size=28, embed_dim=192, depth=24, rms_norm=True, residual_in_fp32=True, fused_add_norm=True, final_pool_type='mean', if_abs_pos_embed=True, if_rope=True, if_rope_residual=True, bimamba_type="v2", if_cls_token=True, **kwargs)
     model.default_cfg = _cfg()
     if pretrained:
         checkpoint = torch.hub.load_state_dict_from_url(
@@ -410,7 +413,7 @@ def vim_tiny_patch16_224_bimambav2_final_pool_mean_abs_pos_embed_rope_also_resid
 
 
 @register_model
-def vim_tiny_patch8_224_bimambav2_final_pool_mean_abs_pos_embed_rope_also_residual(pretrained=False, **kwargs):
+def vim_tiny_patch8_112_bimambav2_final_pool_mean_abs_pos_embed_rope_also_residual(pretrained=False, **kwargs):
     model = VisionMamba(
         patch_size=8, embed_dim=192, depth=24, rms_norm=True, residual_in_fp32=True, fused_add_norm=True, final_pool_type='mean', if_abs_pos_embed=True, if_rope=True, if_rope_residual=True, bimamba_type="v2", **kwargs)
     model.default_cfg = _cfg()
@@ -424,7 +427,7 @@ def vim_tiny_patch8_224_bimambav2_final_pool_mean_abs_pos_embed_rope_also_residu
 
 
 @register_model
-def vim_tiny_patch8_224_bimambav2_final_pool_mean_abs_pos_embed_rope_also_residual_with_cls_token(pretrained=False, **kwargs):
+def vim_tiny_patch8_112_bimambav2_final_pool_mean_abs_pos_embed_rope_also_residual_with_cls_token(pretrained=False, **kwargs):
     model = VisionMamba(
         patch_size=8, embed_dim=192, depth=24, rms_norm=True, residual_in_fp32=True, fused_add_norm=True, final_pool_type='mean', if_abs_pos_embed=True, if_rope=True, if_rope_residual=True, bimamba_type="v2", if_cls_token=True, **kwargs)
     model.default_cfg = _cfg()
@@ -438,9 +441,9 @@ def vim_tiny_patch8_224_bimambav2_final_pool_mean_abs_pos_embed_rope_also_residu
 
 
 @register_model
-def vim_small_patch16_224_bimambav2_final_pool_mean_abs_pos_embed_rope_also_residual(pretrained=False, **kwargs):
+def vim_small_patch28_112_bimambav2_final_pool_mean_abs_pos_embed_rope_also_residual(pretrained=False, **kwargs):
     model = VisionMamba(
-        patch_size=16, embed_dim=384, depth=24, rms_norm=True, residual_in_fp32=True, fused_add_norm=True, final_pool_type='mean', if_abs_pos_embed=True, if_rope=True, if_rope_residual=True, bimamba_type="v2", **kwargs)
+        patch_size=28, embed_dim=384, depth=24, rms_norm=True, residual_in_fp32=True, fused_add_norm=True, final_pool_type='mean', if_abs_pos_embed=True, if_rope=True, if_rope_residual=True, bimamba_type="v2", **kwargs)
     model.default_cfg = _cfg()
     if pretrained:
         checkpoint = torch.hub.load_state_dict_from_url(
@@ -452,9 +455,9 @@ def vim_small_patch16_224_bimambav2_final_pool_mean_abs_pos_embed_rope_also_resi
 
 
 @register_model
-def vim_base_patch16_224_bimambav2_final_pool_mean_abs_pos_embed_rope_also_residual(pretrained=False, **kwargs):
+def vim_base_patch28_112_bimambav2_final_pool_mean_abs_pos_embed_rope_also_residual(pretrained=False, **kwargs):
     model = VisionMamba(
-        patch_size=16, embed_dim=768, depth=24, rms_norm=True, residual_in_fp32=True, fused_add_norm=True, final_pool_type='mean', if_abs_pos_embed=True, if_rope=True, if_rope_residual=True, bimamba_type="v2", **kwargs)
+        patch_size=28, embed_dim=768, depth=24, rms_norm=True, residual_in_fp32=True, fused_add_norm=True, final_pool_type='mean', if_abs_pos_embed=True, if_rope=True, if_rope_residual=True, bimamba_type="v2", **kwargs)
     model.default_cfg = _cfg()
     if pretrained:
         checkpoint = torch.hub.load_state_dict_from_url(
